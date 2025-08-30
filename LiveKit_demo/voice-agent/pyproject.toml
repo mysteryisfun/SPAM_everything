@@ -13,10 +13,11 @@ dependencies = [
     "livekit-plugins-noise-cancellation",
     "langchain",
     "langchain-openai",
-    "langchain-chroma", 
+    "langchain-chroma",
     "chromadb",
     "openai",
     "python-multipart",
     "aiofiles",
-    "python-dotenv"
+    "python-dotenv",
+    "requests>=2.32.5",
 ]

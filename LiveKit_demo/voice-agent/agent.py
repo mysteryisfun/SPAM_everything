@@ -6,7 +6,7 @@ from livekit.plugins import (
     openai,
     noise_cancellation,
 )
-from tools import get_wheather, query_information
+from tools import get_wheather, query_information, get_contact_info
 load_dotenv(".env")
 
 
@@ -14,7 +14,7 @@ load_dotenv(".env")
 #from tools import get_wheather
 class Assistant(Agent):
     def __init__(self) -> None:
-        super().__init__(instructions="You are a helpful voice AI assistant.",tools = [get_wheather,query_information])
+        super().__init__(instructions="You are a helpful voice AI assistant.",tools = [get_wheather,query_information,get_contact_info])
         
 
 async def entrypoint(ctx: agents.JobContext):
