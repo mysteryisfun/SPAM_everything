@@ -8,15 +8,15 @@ dependencies = [
     "fastapi",
     "uvicorn[standard]",
     "livekit",
-    "livekit-api",
+    "livekit-agents[openai]",
     "livekit-plugins-openai",
+    "livekit-plugins-noise-cancellation",
     "langchain",
     "langchain-openai",
-    "langchain-community",
+    "langchain-chroma", 
     "chromadb",
     "openai",
     "python-multipart",
     "aiofiles",
-    "python-dotenv",
-    "pydantic-settings"
+    "python-dotenv"
 ]
