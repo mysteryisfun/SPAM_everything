@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .status.idle {
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        .status.connecting {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.listening {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .status.speaking {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 150px;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.secondary {
+            background: #6c757d;
+        }
+
+        .button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Voice Agent</h1>
+        <p class="subtitle">Your AI-powered voice assistant with knowledge base</p>
+
+        <div id="status" class="status idle">Ready to start conversation</div>
+
+        <div>
+            <button id="startBtn" class="button" onclick="startConversation()">
+                Start Conversation
+            </button>
+            <button id="stopBtn" class="button secondary" onclick="stopConversation()" disabled>
+                Stop
+            </button>
+        </div>
+
+        <div class="info">
+            <p><strong>How it works:</strong></p>
+            <p>1. Click "Start Conversation" to connect</p>
+            <p>2. Allow microphone access when prompted</p>
+            <p>3. Speak naturally - the agent will respond with voice</p>
+            <p>4. Ask about company history, products, or services</p>
+        </div>
+    </div>
+
+    <script>
+        let room = null;
+        let isConnected = false;
+
+        async function startConversation() {
+            try {
+                updateStatus('connecting', 'Connecting to voice agent...');
+
+                // Get LiveKit token from backend
+                const tokenResponse = await fetch('http://localhost:8000/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        room_name: 'voice-room',
+                        participant_name: 'user'
+                    })
+                });
+
+                if (!tokenResponse.ok) {
+                    throw new Error('Failed to get access token');
+                }
+
+                const tokenData = await tokenResponse.json();
+
+                // Start the agent
+                await fetch('http://localhost:8000/start-agent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        room_name: 'voice-room'
+                    })
+                });
+
+                // Connect to LiveKit room
+                await connectToRoom(tokenData.token, tokenData.url, tokenData.room);
+
+                updateStatus('listening', 'Connected! Start speaking...');
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+
+            } catch (error) {
+                console.error('Error starting conversation:', error);
+                updateStatus('error', 'Failed to start conversation. Check console for details.');
+            }
+        }
+
+        async function connectToRoom(token, url, roomName) {
+            // This would use the LiveKit JavaScript SDK
+            // For now, we'll simulate the connection
+            console.log('Connecting to room:', roomName);
+
+            // In a real implementation, you would:
+            // 1. Import LiveKit SDK: import { Room } from 'livekit-client';
+            // 2. Create room instance: const room = new Room();
+            // 3. Connect: await room.connect(url, token);
+            // 4. Handle audio tracks and events
+
+            isConnected = true;
+            console.log('Connected to LiveKit room');
+        }
+
+        async function stopConversation() {
+            try {
+                updateStatus('idle', 'Stopping conversation...');
+
+                // Stop the agent
+                await fetch('http://localhost:8000/stop-agent', {
+                    method: 'POST'
+                });
+
+                // Disconnect from room
+                if (room) {
+                    // room.disconnect();
+                }
+
+                isConnected = false;
+                updateStatus('idle', 'Conversation ended');
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+
+            } catch (error) {
+                console.error('Error stopping conversation:', error);
+                updateStatus('error', 'Error stopping conversation');
+            }
+        }
+
+        function updateStatus(type, message) {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${type}`;
+            statusEl.textContent = message;
+
+            if (type === 'connecting' || type === 'listening' || type === 'speaking') {
+                statusEl.classList.add('pulse');
+            } else {
+                statusEl.classList.remove('pulse');
+            }
+        }
+
+        // Handle page unload
+        window.addEventListener('beforeunload', () => {
+            if (isConnected) {
+                stopConversation();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+[project]
+name = "voice-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "livekit",
+    "livekit-api",
+    "livekit-plugins-openai",
+    "langchain",
+    "langchain-openai",
+    "langchain-community",
+    "chromadb",
+    "openai",
+    "python-multipart",
+    "aiofiles",
+    "python-dotenv",
+    "pydantic-settings"
+]
