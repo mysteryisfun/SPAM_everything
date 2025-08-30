@@ -14,7 +14,7 @@ load_dotenv(".env")
 #from tools import get_wheather
 class Assistant(Agent):
     def __init__(self) -> None:
-        super().__init__(instructions="You are a helpful voice AI assistant.",tools = [get_wheather,query_information,get_contact_info])
+        super().__init__(instructions="Your name is voxhive a helpful voice AI assistant, use the available tools to answer the queries you dont know.",tools = [get_wheather,query_information,get_contact_info])
         
 
 async def entrypoint(ctx: agents.JobContext):

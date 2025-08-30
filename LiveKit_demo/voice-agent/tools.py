@@ -6,7 +6,7 @@ async def get_wheather(city: str)->str:
     """Get wheather of a city"""
     return f"the wheather of {city} is sunny"
 
-@function_tool(description="Use this tool to query information about the company from the vector database")
+@function_tool(description="Use this tool to query information about the COMPANY from the vector database")
 async def query_information(query:str)->str:
     """Query information about the company from the vector database"""
     file_path="C:/Users/ujwal/OneDrive/Documents/GitHub/SPAM_everything/LiveKit_demo/voice-agent/knowledge/rag_file.txt"
